@@ -19,16 +19,17 @@ class ResetLL():
     def __init__(self, directories):
 
         self._directories = directories
-
-        print("starting")
-        print("Initialized with directories: ")
-        print(self._directories)
+        print("|**************************************************|")
+        print("|Welcome to the Cisco DevNet git-intro reset script|")
+        print("|**************************************************|")
+        print("Configuration:")
+        print("\nDir to seek and destroy: ".join(self._directories))
 
     def reset_git_config(self):
 
-        message = "Remove user info?"
+        message = "Remove user info? "
 
-        print("Starting reset config")
+        print("STEP 2: reset config ...")
         globalconfig = git.GitConfigParser(os.path.normpath(os.path.expanduser("~/.gitconfig")), read_only=False)
 
         print("*********************************")
@@ -43,7 +44,7 @@ class ResetLL():
           response = raw_input(message)
 
         if response == "yes":
-            print("Resetting user")
+            print("Resetting user...")
             globalconfig.set_value("user", "name", "John Doe")
             globalconfig.set_value("user", "email", "jdoe@doe.com")
         else:
@@ -51,17 +52,20 @@ class ResetLL():
 
     def check_directory(self):
 
-        print("Checking directories")
+        print("STEP 1: checking directories ...")
+
+        message = "Delete directory? "
 
         for dir in self._directories:
             if (os.path.exists(dir)):
                 print("*********************************")
-                print("Found directory:" + dir)
+                print("Found directory: ")
                 print("*********************************")
+                print("\t" + dir)
                 if py3:
-                  response = input("Delete directory? ")
+                  response = input(message)
                 else:
-                  response = raw_input("Delete directory? ")
+                  response = raw_input(message)
 
                 if response == "yes":
                     print("Deleting: " + dir)
@@ -73,9 +77,12 @@ class ResetLL():
 if __name__ == '__main__':
 
     home = expanduser("~")
-    directories = ['/src/git-intro', home + '/src/git-intro']
+    directories = ['/src/git-intro',
+        home + '/src/git-intro',
+        '/src/upgraded-guacamole',
+        home + '/src/upgraded-guacamole']
 
     reset = ResetLL(directories)
     dir_result = reset.check_directory()
     cofig_result = reset.reset_git_config()
-    print("Finished workstation cleanup!")
+    print("NO MORE STEPS: Finished workstation cleanup!")
