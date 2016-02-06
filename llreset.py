@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import shutil
@@ -27,7 +29,7 @@ class ResetLL():
         message = "Remove user info?"
 
         print("Starting reset config")
-        globalconfig = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=True)
+        globalconfig = git.GitConfigParser(os.path.normpath(os.path.expanduser("~/.gitconfig")), read_only=False)
 
         print("*********************************")
         print("Current git global config values:")
@@ -42,8 +44,8 @@ class ResetLL():
 
         if response == "yes":
             print("Resetting user")
-            globalconfig.set_value("user", "name")
-            globalconfig.set_value("user", "email")
+            globalconfig.set_value("user", "name", "John Doe")
+            globalconfig.set_value("user", "email", "jdoe@doe.com")
         else:
             print("No changes made. Continuing...")
 
