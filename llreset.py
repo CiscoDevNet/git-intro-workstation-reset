@@ -23,10 +23,29 @@ class ResetLL():
         print(self._directories)
 
     def reset_git_config(self):
-        print("reset config")
-        gitconfig = Gitconfig(_home + "/.gitconfig",True)
-        user = gitconfig.user.password
-        print(user)
+
+        message = "Remove user info?"
+
+        print("Starting reset config")
+        globalconfig = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=True)
+
+        print("*********************************")
+        print("Current git global config values:")
+        print("*********************************")
+        print("\t" + globalconfig.get_value("user", "name"))
+        print("\t" + globalconfig.get_value("user", "email"))
+
+        if py3:
+          response = input(message)
+        else:
+          response = raw_input(message)
+
+        if response == "yes":
+            print("Resetting user")
+            globalconfig.set_value("user", "name")
+            globalconfig.set_value("user", "email")
+        else:
+            print("No changes made. Continuing...")
 
     def check_directory(self):
 
@@ -34,7 +53,9 @@ class ResetLL():
 
         for dir in self._directories:
             if (os.path.exists(dir)):
+                print("*********************************")
                 print("Found directory:" + dir)
+                print("*********************************")
                 if py3:
                   response = input("Delete directory? ")
                 else:
@@ -44,8 +65,7 @@ class ResetLL():
                     print("Deleting: " + dir)
                     shutil.rmtree(dir)
                 else:
-                    print("Aborting")
-                    sys.exit("Aborted!")
+                    print("No changes made. Continuing...")
 
 
 if __name__ == '__main__':
@@ -54,5 +74,6 @@ if __name__ == '__main__':
     directories = ['/src/git-intro', home + '/src/git-intro']
 
     reset = ResetLL(directories)
-    #dir_result = reset.check_directory()
+    dir_result = reset.check_directory()
     cofig_result = reset.reset_git_config()
+    print("Finished workstation cleanup!")
